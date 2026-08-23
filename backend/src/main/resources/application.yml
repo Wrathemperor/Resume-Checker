@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: resume-checker
+
+server:
+  port: ${PORT:8000}
+
+  # Database Configuration
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/resume_checker}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+
+  # JPA & Hibernate
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+
+  # Flyway Migrations
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+  # AI Provider (Using Gemini via OpenAI compatible endpoint)
+  ai:
+    openai:
+      base-url: https://generativelanguage.googleapis.com/v1beta/openai
+      api-key: ${GEMINI_API_KEY:}
+      chat:
+        completions-path: /chat/completions   # Override: Gemini compat has no /v1 prefix
+        options:
+          model: ${LLM_MODEL:gemini-2.0-flash}
+          temperature: ${LLM_TEMPERATURE:0.1}
+
+  # File Upload Config
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 50MB
+
+app:
+  upload-dir: ${UPLOAD_DIR:./uploads}
+  shortlist-threshold: ${SHORTLIST_THRESHOLD:7}
+
+logging:
+  level:
+    com.resumechecker: DEBUG
+    org.springframework.ai: INFO

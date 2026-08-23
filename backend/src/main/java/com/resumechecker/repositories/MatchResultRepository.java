@@ -1,0 +1,14 @@
+package com.resumechecker.repositories;
+
+import com.resumechecker.models.MatchResult;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.UUID;
+
+@Repository
+public interface MatchResultRepository extends JpaRepository<MatchResult, UUID> {
+    List<MatchResult> findByJobDescriptionId(UUID jobId);
+    List<MatchResult> findByCandidateId(UUID candidateId);
+}
