@@ -2,6 +2,8 @@
 
 **🔗 Live Site: [resumekaai.vercel.app](https://resumekaai.vercel.app/)**
 
+> **⚠️ Note on First Use:** The backend is hosted on a free Render instance which spins down after 15 minutes of inactivity. When you first use the site, **please allow ~60 seconds** for the backend to wake up and process your request.
+
 An intelligent, full-stack application that parses candidate CVs, extracts structured data using Google Gemini AI, and matches candidates against job descriptions with explainable scoring.
 
 ## Table of Contents
@@ -48,30 +50,40 @@ An intelligent, full-stack application that parses candidate CVs, extracts struc
 
 ## Architecture Overview
 
-```
-User Browser (Vercel)
-   |-- / (Landing Page)
-   |-- /upload (Document Ingestion)
-   |-- /jobs (Job Matching)
-         |
-         | HTTPS (VITE_API_BASE_URL/api)
-         v
-Spring Boot API (Render, port 8000)
-   |
-   |-- POST /api/resumes/upload
-   |     1. Save PDF to disk
-   |     2. Hash file, reject duplicates
-   |     3. Extract text via PDFBox
-   |     4. Call Gemini API for structured extraction
-   |     5. Persist Candidate + Skills to DB
-   |
-   |-- POST /api/jobs/{jobId}/match/{resumeId}
-   |     1. Load Candidate and Job from DB
-   |     2. Call Gemini API for scoring
-   |     3. Persist MatchResult
-   |
-   |-- Supabase PostgreSQL (6 tables, UUID PKs)
-   |-- Google Gemini API (gemini-2.5-flash)
+```mermaid
+flowchart TB
+    subgraph Client ["User Browser (Vercel)"]
+        UI_Landing["/ (Landing Page)"]
+        UI_Upload["/upload (Document Ingestion)"]
+        UI_Jobs["/jobs (Job Matching)"]
+    end
+
+    subgraph Backend ["Spring Boot API (Render)"]
+        API_Upload["POST /api/resumes/upload"]
+        API_Match["POST /api/jobs/{jobId}/match/{resumeId}"]
+        
+        PDFBox["Apache PDFBox (Text Extraction)"]
+        FileSys["Local Disk (PDF Storage)"]
+    end
+
+    subgraph External ["External Services"]
+        DB[(Supabase PostgreSQL)]
+        Gemini["Google Gemini API"]
+    end
+
+    UI_Upload -- "Multipart PDF" --> API_Upload
+    UI_Jobs -- "Match Request" --> API_Match
+
+    API_Upload --> FileSys
+    API_Upload --> PDFBox
+    PDFBox --> Gemini : "Extract structured data"
+    Gemini --> API_Upload : "Parsed Resume JSON"
+    API_Upload --> DB : "Save Candidate & Skills"
+
+    API_Match --> DB : "Fetch Candidate & Job"
+    API_Match --> Gemini : "Score candidate"
+    Gemini --> API_Match : "MatchResult JSON"
+    API_Match --> DB : "Persist Score"
 ```
 
 ### Backend Package Structure
