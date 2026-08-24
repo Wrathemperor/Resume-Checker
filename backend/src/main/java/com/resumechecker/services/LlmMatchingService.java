@@ -30,7 +30,7 @@ public class LlmMatchingService {
         
         Provide a detailed JSON evaluation with the following structure:
         {
-          "score": 0-10 (integer representing overall fit),
+          "score": <integer from 0 to 100 representing overall fit percentage>,
           "justification": "Detailed explanation of why this score was given, highlighting key alignments and gaps",
           "matchingSkills": ["Skill 1", "Skill 2"],
           "missingSkills": ["Missing 1", "Missing 2"],
@@ -38,6 +38,7 @@ public class LlmMatchingService {
           "concerns": ["Concern 1", "Concern 2"]
         }
         
+        The score must be an integer between 0 and 100. A score of 75+ means the candidate is a strong fit.
         Ensure your response is valid JSON and contains NO markdown blocks or other text.
         """;
 
