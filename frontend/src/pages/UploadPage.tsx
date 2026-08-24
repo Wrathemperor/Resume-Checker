@@ -36,8 +36,12 @@ export default function UploadPage() {
       await resumeApi.upload(file);
       setFile(null);
       await fetchResumes();
-    } catch (error) {
-      alert("Upload failed. Ensure backend is running and Gemini API key is valid.");
+    } catch (error: any) {
+      const status = error?.response?.status;
+      const msg = error?.response?.data?.message || error?.message || 'Unknown error';
+      const url = error?.config?.url || error?.request?.responseURL || 'unknown URL';
+      console.error("Upload error:", error);
+      alert(`Upload failed!\n\nStatus: ${status || 'No response (CORS or network error)'}\nMessage: ${msg}\nURL called: ${url}\n\nCheck browser console (F12) for full details.`);
     } finally {
       setUploading(false);
     }
