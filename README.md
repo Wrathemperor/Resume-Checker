@@ -1,4 +1,6 @@
-﻿# ResumeAI — AI-Powered Resume Checker
+# ResumeAI — AI-Powered Resume Checker
+
+**🔗 Live Site: [resumekaai.vercel.app](https://resumekaai.vercel.app/)**
 
 An intelligent, full-stack application that parses candidate CVs, extracts structured data using Google Gemini AI, and matches candidates against job descriptions with explainable scoring.
 
@@ -14,7 +16,6 @@ An intelligent, full-stack application that parses candidate CVs, extracts struc
 - [Environment Variables](#environment-variables)
 - [Available Scripts](#available-scripts)
 - [Deployment](#deployment)
-- [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -339,60 +340,8 @@ docker compose logs backend -f   # Tail backend logs
    ```
 4. Set this as `SPRING_DATASOURCE_URL` in Render
 
----
-
-## Troubleshooting
-
-### `OpenAI API key must be set` on startup
-
-The backend cannot find `GEMINI_API_KEY`. Add it to Render's Environment Variables and redeploy. The app strictly validates this on startup.
-
----
-
-### `ERROR: prepared statement "S_1" does not exist`
-
-Supabase's PgBouncer pooler (port 6543) runs in transaction mode and drops JDBC prepared statements between queries.
-
-**Fix:** Append `?prepareThreshold=0` to your `SPRING_DATASOURCE_URL`, or switch to port `5432` (direct connection, bypasses pooler).
-
----
-
-### `Upload failed` on the live Vercel site
-
-The frontend is calling `localhost:8000` instead of your Render URL.
-
-**Fix:**
-1. Set `VITE_API_BASE_URL` = `https://your-app.onrender.com/api` in Vercel Environment Variables
-2. **Redeploy Vercel** — saving the variable alone is not enough; Vite must rebuild
-
----
-
-### `404 Not Found` when calling the API
-
-`VITE_API_BASE_URL` is missing the `/api` suffix.
-
-**Fix:** Ensure the value ends with `/api`:
-```
-https://your-render-app.onrender.com/api   correct
-https://your-render-app.onrender.com       wrong (missing /api)
-```
-
----
-
-### Gemini returns `404 Not Found` with "model no longer available"
-
-The configured model has been deprecated by Google.
-
-**Fix:** Set `LLM_MODEL` = `gemini-2.5-flash` in Render's Environment Variables, or update the default in `application.yml`.
-
----
-
-### Backend takes 30+ seconds to respond
-
-Render's free tier spins down services after 15 minutes of inactivity (cold start). Upgrade to a paid Render instance for always-on behaviour.
-
----
 
 ## License
 
 MIT
+
