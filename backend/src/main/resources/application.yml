@@ -34,7 +34,7 @@ spring:
       chat:
         completions-path: /chat/completions
         options:
-          model: ${LLM_MODEL:gemini-2.5-flash}
+          model: ${LLM_MODEL:gemini-3.6-flash}
           temperature: ${LLM_TEMPERATURE:0.1}
 
   # File Upload Config
