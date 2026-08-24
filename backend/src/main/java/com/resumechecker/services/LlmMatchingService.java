@@ -21,7 +21,7 @@ public class LlmMatchingService {
     @Value("${GEMINI_API_KEY:}")
     private String apiKey;
 
-    @Value("${LLM_MODEL:gemini-2.0-flash}")
+    @Value("${LLM_MODEL:gemini-3.6-flash}")
     private String model;
 
     private static final String SYSTEM_PROMPT = """

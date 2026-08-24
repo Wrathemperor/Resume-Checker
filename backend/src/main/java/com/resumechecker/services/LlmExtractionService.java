@@ -21,7 +21,7 @@ public class LlmExtractionService {
     @Value("${GEMINI_API_KEY:}")
     private String apiKey;
 
-    @Value("${LLM_MODEL:gemini-2.0-flash}")
+    @Value("${LLM_MODEL:gemini-3.6-flash}")
     private String model;
 
     // System prompt that instructs Gemini to return structured JSON
