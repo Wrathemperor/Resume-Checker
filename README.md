@@ -76,14 +76,14 @@ flowchart TB
 
     API_Upload --> FileSys
     API_Upload --> PDFBox
-    PDFBox --> Gemini : "Extract structured data"
-    Gemini --> API_Upload : "Parsed Resume JSON"
-    API_Upload --> DB : "Save Candidate & Skills"
+    PDFBox -- "Extract structured data" --> Gemini
+    Gemini -- "Parsed Resume JSON" --> API_Upload
+    API_Upload -- "Save Candidate & Skills" --> DB
 
-    API_Match --> DB : "Fetch Candidate & Job"
-    API_Match --> Gemini : "Score candidate"
-    Gemini --> API_Match : "MatchResult JSON"
-    API_Match --> DB : "Persist Score"
+    API_Match -- "Fetch Candidate & Job" --> DB
+    API_Match -- "Score candidate" --> Gemini
+    Gemini -- "MatchResult JSON" --> API_Match
+    API_Match -- "Persist Score" --> DB
 ```
 
 ### Backend Package Structure
@@ -353,7 +353,5 @@ docker compose logs backend -f   # Tail backend logs
 4. Set this as `SPRING_DATASOURCE_URL` in Render
 
 
-## License
-
-MIT
+Built with ❤️ by Anvay
 
